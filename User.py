@@ -23,7 +23,7 @@ class UserDatabase:
         self.myTable = {}
     
     def AddUser(self, userDetails):
-        username = userdetails.username
+        username = userDetails.username
         password = userDetails.password
         email = userDetails.email
         name = userDetails.name
@@ -43,7 +43,6 @@ class UserDatabase:
                                   'email' : email,
                                   'name' : name,
                                   'points' : startingNumberOfPoints}
-        userDetails.password = None
         userDetails.points = startingNumberOfPoints
         return [True, userDetails]
 
@@ -57,6 +56,7 @@ class UserDatabase:
             return [False, "Error: Invalid password"]
         
         self.myTable.pop(userInfo.userName)
+        userInfo.password = None
         return [True, userInfo]
 
     def CorrectPassword(self, userDetails):
@@ -65,18 +65,19 @@ class UserDatabase:
 
         userInfo = self.GetUserInfo(userDetails)
         if not userInfo[0]:
-            return False
-        return (self.myTable[username]['password'] is password)
+            return [False, "Invalid username"]
+        if not (self.myTable[username]['password'] is password):
+            return [False, "Wrong password"]
+        return [True, "Correct password"]
 
     def GetUserInfo(self, userDetails):
         username = userDetails.username
         
         if username not in self.myTable:
             return [False, "Error: Invalid username"]
-        
-        userDetails.password = None
-        userDetails.email = self.myTable['email']
-        userDetails.name = self.myTable['name']
-        userDetails.points = self.myTable['points']
+
+        userDetails.email = self.myTable[username]['email']
+        userDetails.name = self.myTable[username]['name']
+        userDetails.points = self.myTable[username]['points']
         return [True, userDetails]
     

@@ -10,8 +10,8 @@ import User
 
 class ServerAPI:
     def __init__(self):
-        self.sessions = SessionDatabase.SessionDatabase()
-        self.users = UserDatabase.UserDatabase()
+        self.sessions = Session.SessionDatabase()
+        self.users = User.UserDatabase()
 
     def LogIn(self, userDetails, sessionDetails):
         correctPassword = self.users.CorrectPassword(userDetails)
@@ -24,10 +24,12 @@ class ServerAPI:
         validation = self.sessions.ValidSession(sessionDetails)
         if not validation[0]:
             return validation
-        userDetails = UserDatabase.UserInformation(
+        userDetails = User.UserInformation(
             username=sessionDetails.username
             )
-        return self.users.GetUserInfo(userDetails)
+        userInfo = self.users.GetUserInfo(userDetails)
+        if userInfo[0]: userInfo[1].password = None
+        return userInfo
 
     def Register(self, userDetails, sessionDetails):
         IP = sessionDetails.IP
@@ -37,7 +39,7 @@ class ServerAPI:
         registration = self.users.AddUser(userDetails)
         if not registration[0]:
             return registration
-        return LogIn(userDetails, sessionDetails)
+        return self.LogIn(userDetails, sessionDetails)
 
     def SignOut(self, sessionDetails):
         return self.sessions.RemoveSession(sessionDetails)

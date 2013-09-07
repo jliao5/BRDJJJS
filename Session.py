@@ -16,7 +16,7 @@ class SessionInformation:
         self.username = None
         self.IP = None
         self.cookie = None
-        self.SessionID = None
+        self.sessionID = None
 
 class SessionDatabase:
     def __init__(self):
@@ -45,7 +45,9 @@ class SessionDatabase:
         self.myTable[newSessionID] = {'username' : username,
                                       'IP' : IP,
                                       'cookie' : cookie}
-        return [True, cookie]
+        sessionDetails.cookie = cookie
+        sessionDetails.sessionID = newSessionID
+        return [True, sessionDetails]
 
     def RemoveSession(self, sessionDetails):
         validation = self.ValidSession(sessionDetails)
@@ -62,8 +64,8 @@ class SessionDatabase:
         IP = sessionDetails.IP
         cookie = sessionDetails.cookie
         
-        if sessionID is None:
-            return [False, "Error: No sessionID"]
+        if sessionID not in self.myTable:
+            return [False, "Error: Wrong sessionID"]
         if self.myTable[sessionID]['username'] is not username:
             return [False, "Error: Wrong username"]
         if self.myTable[sessionID]['IP'] is not IP:
