@@ -25,10 +25,10 @@ class SessionDatabase:
     
     def AddSession(self, sessionDetails):
         username = sessionDetails.username
+        IP = sessionDetails.IP
+        
         if username is None:
             return [False, "Error: No username"]
-            
-        IP = sessionDetails.IP
         if IP is None:
             return [False, "Error: No IP address"]
             
@@ -37,17 +37,39 @@ class SessionDatabase:
             self.nextSessionID = self.nextSessionID + 1
             if newSessionID not in self.myTable:
                 break
+            
         cookie = ''
         for i in range(lengthOfCookie):
             cookie += random.choice(hexChars)
+            
         self.myTable[newSessionID] = {'username' : username,
                                       'IP' : IP,
                                       'cookie' : cookie}
         return [True, cookie]
 
     def RemoveSession(self, sessionDetails):
-        pass
+        validation = self.ValidSession(sessionDetails)
+        
+        if validation[0]:
+            username = self.myTable.pop(sessionDetails.sessionID
+                                        )['username']
+            validation[1] = "Logged out " + username
+        return validation
 
     def ValidSession(self, sessionDetails):
-        pass
+        sessionID = sessionDetails.sessionID
+        username = sessionDetails.username
+        IP = sessionDetails.IP
+        cookie = sessionDetails.cookie
+        
+        if sessionID is None:
+            return [False, "Error: No sessionID"]
+        if self.myTable[sessionID]['username'] is not username:
+            return [False, "Error: Wrong username"]
+        if self.myTable[sessionID]['IP'] is not IP:
+            return [False, "Error: Wrong IP address"]
+        if self.myTable[sessionID]['cookie'] is not cookie:
+            return [False, "Error: Wrong cookie"]
+
+        return [True, "Valid Session"]
     
