@@ -9,4 +9,5 @@ import SessionDatabase
 
 class ServerAPI:
     def __init__(self):
-        sessions = SessionDatabase()
+        sessions = SessionDatabase.SessionDatabase()
+        

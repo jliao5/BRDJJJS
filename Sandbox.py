@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Spyder Editor
-
-This temporary script file is located here:
-C:\Users\Jack\.spyder2\.temp.py
+Use this file in order to play around, see examples, and just help code.
 """
 
 greeting = "Hello World!"
